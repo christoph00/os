@@ -20,6 +20,11 @@ RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2*
 
 RUN adduser core -g wheel
 
+# for test
+RUN echo "root:root" | chpasswd
+
+
+
 ADD ${KEYS_URL} /usr/etc-system/core.keys
 
 RUN touch /etc/ssh/sshd_config.d/30-auth-system.conf; \
