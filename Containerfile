@@ -15,7 +15,7 @@ RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2*
     dnf -y install authselect nu firewalld wireguard-tools git-core htop
 
 
-RUN chmod +x /scripts/*.ssh; \
+RUN chmod +x /scripts/*.sh; \
     /scripts/homed-selinux.sh; \
     dnf clean all; \
     rm -rf /tmp/*; \
