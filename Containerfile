@@ -10,7 +10,8 @@ ADD ./files/ /
 
 
 RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2* mdadm*; \
-    dnf -y install authselect nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive
+    dnf -y install authselect nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive vim-minimal util-linux usbutils \
+    systemd-oomd-defaults systemd-resolved qemu-guest-agent NetworkManager-bluetooth  
 
 
 RUN chmod +x /scripts/*.sh;
@@ -28,6 +29,7 @@ LABEL containers.bootc  1
 
 FROM os-main as os-desktop
 
-RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm fedora-release-kinoite langpacks-en flatpak-kcm distrobox
+RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm fedora-release-kinoite konsole langpacks-en flatpak-kcm distrobox \
+        zram-generator-defaults kf6-networkmanager-qt NetworkManager-wifi
 
 RUN systemctl set-default graphical.target
