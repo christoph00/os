@@ -10,7 +10,7 @@ ADD ./files/ /
 
 
 RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2* mdadm*; \
-    dnf -y install authselect nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive vim-minimal util-linux usbutils \
+    dnf -y install authselect bfachefs-tools nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive vim-minimal util-linux usbutils \
     systemd-oomd-defaults systemd-resolved qemu-guest-agent NetworkManager-bluetooth  
 
 
