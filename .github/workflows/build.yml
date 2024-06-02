@@ -11,6 +11,8 @@ on:
   pull_request:
     branches:
       - master
+env:
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build:
@@ -27,7 +29,6 @@ jobs:
       matrix:
         image_suffix:
           - main
-          - desktop
         include:
           - image_base: os
 
@@ -54,12 +55,10 @@ jobs:
             IMAGE_TAG="$(git rev-parse --short "$GITHUB_SHA")"
           fi
           IMAGE_TAG="${IMAGE_TAG,,}"
-          IMAGE_NAME="${GITHUB_REPOSITORY,,}"
 
           echo "Building ${IMAGE_NAME}:${IMAGE_TAG}"
 
           echo "tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
-          echo "name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
           echo "repo=${GITHUB_REPOSITORY}" >> "$GITHUB_OUTPUT"
           echo "repo_ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
     
@@ -69,19 +68,22 @@ jobs:
         with:
           containerfiles: |
             ./Containerfile
-          image: christoph00/${{ matrix.image_base }}-${{ matrix.image_suffix }}
+          image: ${{ matrix.image_base }}-${{ matrix.image_suffix }}
           tags: ${{ steps.meta.outputs.tag }} ${{ github.event_name == 'release' && 'latest' || 'staging' }}
+          extra-args: --target=${{ matrix.image_base }}-${{ matrix.image_suffix }}
+
           oci: true
           layers: true
-          extra-args: |
-            --target=${{ matrix.image_base }}-${{ matrix.image_suffix }}
+          build-args: |
+            REPO=${{ steps.meta.outputs.repo }}
+            REPO_REF=${{ steps.meta.outputs.repo_ref }}
       - name: Push image to ghcr.io
         id: push
         uses: redhat-actions/push-to-registry@v2
         with:
           tags: ${{ steps.build_image.outputs.tags }}
-          image: christoph00/${{ steps.build_image.outputs.image }}
-          registry: ghcr.io
+          image: ${{ steps.build_image.outputs.image }}
+          registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -98,7 +100,7 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ghcr.io/christoph00/${{ steps.build_image.outputs.image }}@${{ steps.push.outputs.digest }}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.IMAGE_REGISTRY }}/${{ steps.build_image.outputs.image }}@${{ steps.push.outputs.digest }}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
