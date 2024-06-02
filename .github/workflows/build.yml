@@ -73,9 +73,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tag }} ${{ github.event_name == 'release' && 'latest' || 'staging' }}
           oci: true
           layers: true
-          build-args: |
-            REPO=${{ steps.meta.outputs.repo }}
-            REPO_REF=${{ steps.meta.outputs.repo_ref }}
+          extra-args: |
+            --target=${{ matrix.image_base }}${{ matrix.image_suffix }}
       - name: Push image to ghcr.io
         id: push
         uses: redhat-actions/push-to-registry@v2
