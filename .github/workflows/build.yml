@@ -69,7 +69,7 @@ jobs:
         with:
           containerfiles: |
             ./Containerfile
-          image: ${{ matrix.image_base }}-${{ matrix.image_suffix }}
+          image: christoph00/${{ matrix.image_base }}-${{ matrix.image_suffix }}
           tags: ${{ steps.meta.outputs.tag }} ${{ github.event_name == 'release' && 'latest' || 'staging' }}
           oci: true
           layers: true
