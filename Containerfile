@@ -1,5 +1,3 @@
-
-
 FROM scratch as files
 COPY --from=gcr.io/projectsigstore/cosign /ko-app/cosign /bin/cosign
 
@@ -30,12 +28,6 @@ LABEL containers.bootc  1
 
 FROM os-main as os-desktop
 
-RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm fedora-release-kinoite langpacks-en flatpak-kcm
-
-
-
-# install distrobox
-RUN curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sed '/cd$/d' | sh -s -- --prefix /usr
-    
+RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm fedora-release-kinoite langpacks-en flatpak-kcm distrobox
 
 RUN systemctl set-default graphical.target
