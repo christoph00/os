@@ -80,7 +80,7 @@ jobs:
         uses: redhat-actions/push-to-registry@v2
         with:
           tags: ${{ steps.build_image.outputs.tags }}
-          image: ${{ steps.build_image.outputs.image }}
+          image: christoph00/${{ steps.build_image.outputs.image }}
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
@@ -98,7 +98,7 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ steps.build_image.outputs.image }}@${{ steps.push.outputs.digest }}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ghcr.io/christoph00/${{ steps.build_image.outputs.image }}@${{ steps.push.outputs.digest }}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
