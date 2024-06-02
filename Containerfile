@@ -31,4 +31,4 @@ LABEL containers.bootc  1
 
 FROM os-main as os-desktop
 
-RUN dny -y xdg-desktop-portal-kde
+RUN dnf -y xdg-desktop-portal-kde
