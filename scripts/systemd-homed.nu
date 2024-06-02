@@ -11,7 +11,7 @@ run-external "make" "-f" "/usr/share/selinux/devel/Makefile" "homed.pp"
 echo "SELinux rules built."
 run-external "semodule" "--install=homed.pp"
 echo "SELinux rules installed."
-run-external restorecon -rv \
+run-external "restorecon" "-rv" \
     /usr/lib/systemd/systemd-homed \
     /usr/lib/systemd/systemd-homework \
     /usr/lib/systemd/system/systemd-homed.service \
@@ -22,6 +22,6 @@ run-external authselect enable-feature with-systemd-homed
 echo "Authselect support for systemd-homed enabled."
 cd ..
 rm -r homed-selinux
-run-external dnf -y autoremove policycoreutils-devel selinux-policy-devel setools-console
+run-external dnf "-y" autoremove policycoreutils-devel selinux-policy-devel setools-console
 echo "enable systemd-homed"
 run-external systemctl enable systemd-homed
