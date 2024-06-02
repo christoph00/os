@@ -25,3 +25,5 @@ echo "Authselect support for systemd-homed enabled."
 cd ..
 rm -r homed-selinux
 dnf -y autoremove policycoreutils-devel selinux-policy-devel setools-console
+echo "enable systemd-homed"
+systemctl enable systemd-homed

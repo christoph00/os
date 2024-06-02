@@ -29,6 +29,7 @@ jobs:
       matrix:
         image_suffix:
           - main
+          - desktop
         include:
           - image_base: os
 
@@ -75,9 +76,6 @@ jobs:
           extra-args: --target=${{ steps.meta.outputs.name }}
           oci: true
           layers: true
-          build-args: |
-            REPO=${{ steps.meta.outputs.repo }}
-            REPO_REF=${{ steps.meta.outputs.repo_ref }}
       - name: Push image to ghcr.io
         id: push
         uses: redhat-actions/push-to-registry@v2
