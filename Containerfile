@@ -17,7 +17,7 @@ RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2*
 
 RUN chmod +x /scripts/*.sh;
 
-
+RUN /scripts/homed-selinux.sh;
 
 RUN dnf clean all; \
     rm -rf /tmp/*; \
@@ -33,7 +33,6 @@ FROM os-main as os-desktop
 RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm fedora-release-kinoite langpacks-en flatpak-kcm
 
 
-RUN /scripts/homed-selinux.sh;
 
 # install distrobox
 RUN curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sed '/cd$/d' | sh -s -- --prefix /usr
