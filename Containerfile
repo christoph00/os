@@ -34,6 +34,9 @@ RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm fedora-re
 
 
 RUN /scripts/homed-selinux.sh;
+
+# install distrobox
+RUN curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sed '/cd$/d' | sh -s -- --prefix /usr
     
 
 RUN systemctl set-default graphical.target
