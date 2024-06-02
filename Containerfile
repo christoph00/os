@@ -31,6 +31,6 @@ LABEL containers.bootc  1
 
 FROM os-main as os-desktop
 
-RUN dnf -y xdg-desktop-portal-kde plasma-desktop sddm fedora-release-kinoite langpacks-en
+RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm fedora-release-kinoite langpacks-en
 
 RUN systemctl set-default graphical.target
