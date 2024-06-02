@@ -22,6 +22,14 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image_suffix:
+          - main
+          - desktop
+        include:
+          - image_base: os
 
     steps:
       - name: Maximize build space
@@ -61,9 +69,10 @@ jobs:
         with:
           containerfiles: |
             ./Containerfile
-          image: ${{ steps.meta.outputs.name }}
+          image: ${{ matrix.image_base }}-${{ matrix.image_suffix }}
           tags: ${{ steps.meta.outputs.tag }} ${{ github.event_name == 'release' && 'latest' || 'staging' }}
-          oci: false
+          oci: true
+          layers: true
           build-args: |
             REPO=${{ steps.meta.outputs.repo }}
             REPO_REF=${{ steps.meta.outputs.repo_ref }}
