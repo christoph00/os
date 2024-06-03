@@ -28,7 +28,8 @@ jobs:
       fail-fast: false
       matrix:
         image_suffix:
-          - main
+          - vm
+          - server
           - desktop
           - init
         include:

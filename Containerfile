@@ -64,4 +64,30 @@ RUN systemctl set-default graphical.target
 
 RUN dnf -y clean all; rm -rf /tmp/*
 
+
+### Server
+FROM os-main as os-server
+
+RUN dnf -y install openvswitch jq
+
+RUN LATEST_URL=$(curl -sL https://api.github.com/repos/cloud-hypervisor/cloud-hypervisor/releases/latest | jq -r '.assets[] | select(.name? | match(".*cloud-hypervisor$")) | .browser_download_url') \
+    curl -sL -o /usr/bin/cloud-hypervisor ${LATEST_URL}; \
+    chmod +x /usr/bin/cloud-hypervisor; \
+    setcap cap_net_admin+ep /usr/bin/cloud-hypervisor
+
+# CH Remote
+RUN LATEST_REMOTE_URL=$(curl -sL https://api.github.com/repos/cloud-hypervisor/cloud-hypervisor/releases/latest | jq -r '.assets[] | select(.name? | match(".*ch-remote$")) | .browser_download_url') \
+    curl -sL -o /usr/bin/ch-remote ${LATEST_REMOTE_URL}; \
+    chmod +x /usr/bin/ch-remote
+
 LABEL containers.bootc  1
+
+RUN dnf -y clean all; rm -rf /tmp/*
+
+
+### VM
+FROM os-main as os-vm
+
+LABEL containers.bootc  1
+
+RUN dnf -y clean all; rm -rf /tmp/*
