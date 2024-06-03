@@ -41,3 +41,6 @@ RUN chmod +x /tmp/extra-packages.nu; \
 
 
 RUN systemctl set-default graphical.target
+
+
+RUN dnf -y clean all; rm -rf /tmp/*
