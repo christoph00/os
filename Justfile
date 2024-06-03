@@ -16,6 +16,8 @@ build-qcow2 image arch=default_platform:
         --security-opt label=type:unconfined_t \
         -v $(pwd)/.osbuild/config.toml:/config.toml \
         -v $(pwd)/.osbuild/{{image}}/output:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
+        -v osbuild-store:/store \
+        -v dnf-cache:/rpmmd \
         quay.io/centos-bootc/bootc-image-builder:latest \
             --chown 1000:1000 \
             --type qcow2 --rootfs ext4 \
@@ -32,6 +34,8 @@ build-raw image:
         -v $(pwd)/.osbuild/config.toml:/config.toml \
         -v $(pwd)/.osbuild/{{image}}/output:/output \
         -v /var/lib/containers/storage:/var/lib/containers/storage \
+        -v osbuild-store:/store \
+        -v dnf-cache:/rpmmd \
         quay.io/centos-bootc/bootc-image-builder:latest \
             --chown 1000:1000 \
             --type raw --rootfs ext4 \
@@ -48,6 +52,8 @@ build-vmdk image:
         -v $(pwd)/.osbuild/config.toml:/config.toml \
         -v $(pwd)/.osbuild/{{image}}/output:/output \
         -v /var/lib/containers/storage:/var/lib/containers/storage \
+        -v osbuild-store:/store \
+        -v dnf-cache:/rpmmd \
         quay.io/centos-bootc/bootc-image-builder:latest \
             --type vmdk --rootfs ext4 \
             --chown 1000:1000 \
