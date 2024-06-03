@@ -30,6 +30,7 @@ jobs:
         image_suffix:
           - main
           - desktop
+          - init
         include:
           - image_base: os
 

@@ -26,6 +26,21 @@ CMD ["/sbin/init"]
 
 LABEL containers.bootc  1
 
+FROM os-main as os-init
+
+RUN groupadd --force wheel && \
+    chmod u+w /etc/sudoers && \
+    echo "%wheel   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Create devops user
+RUN useradd -G init && \
+    usermod --password $1$jB5apJnm$c/rJxRig6B2xFe6WmKr610 init
+
+
+ENV HOME /home/init
+
+LABEL containers.bootc  1
+    
 
 FROM os-main as os-desktop
 
@@ -56,3 +71,5 @@ RUN systemctl set-default graphical.target
 
 
 RUN dnf -y clean all; rm -rf /tmp/*
+
+LABEL containers.bootc  1
