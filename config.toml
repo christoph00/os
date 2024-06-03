@@ -1,5 +1,0 @@
-[[customizations.user]]
-name = "init"
-password = "init"
-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP6O0SlDB/19KB7TYHBGkG1sk+Ept1F2nxAFHkYrNo1H christoph@x13"
-groups = ["wheel"]

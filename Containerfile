@@ -10,8 +10,8 @@ ADD ./files/ /
 
 
 RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2* mdadm*; \
-    dnf -y install authselect bfachefs-tools nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive vim-minimal util-linux usbutils \
-    systemd-oomd-defaults systemd-resolved qemu-guest-agent NetworkManager-bluetooth  
+    dnf -y install authselect bcache-tools nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive vim-minimal util-linux usbutils \
+    systemd-oomd-defaults systemd-resolved qemu-guest-agent NetworkManager-bluetooth udisks2
 
 
 RUN chmod +x /scripts/*.sh;
@@ -32,13 +32,25 @@ FROM os-main as os-desktop
 
 RUN dnf -y install xdg-desktop-portal-kde plasma-desktop sddm sddm-kcm sddm-breeze fedora-release-kinoite konsole langpacks-en flatpak-kcm distrobox \
         zram-generator-defaults kf6-networkmanager-qt NetworkManager-wifi fedora-workstation-repositories default-fonts-core-mono default-fonts-core-sans systemd-container flatpak xdg-desktop-portal \
-        plasma-nm plasma-pa plasma-systemmonitor plasma-print-manager plasma-vault plasma-workspace-wayland sddm-wayland-plasma signon-kwallet-extension spectacle udisks2 xwaylandvideobridge kaccounts-providers polkit-kde
+        plasma-nm plasma-pa plasma-systemmonitor plasma-print-manager plasma-vault plasma-workspace-wayland sddm-wayland-plasma signon-kwallet-extension spectacle  xwaylandvideobridge kaccounts-providers polkit-kde \
+        openvswitch jq
 
 ADD ./scripts/extra-packages.nu /tmp/extra-packages.nu
+
 
 RUN chmod +x /tmp/extra-packages.nu; \
     /tmp/extra-packages.nu
 
+
+RUN LATEST_URL=$(curl -sL https://api.github.com/repos/cloud-hypervisor/cloud-hypervisor/releases/latest | jq -r '.assets[] | select(.name? | match(".*cloud-hypervisor$")) | .browser_download_url') \
+    curl -sL -o /usr/bin/cloud-hypervisor ${LATEST_URL}; \
+    chmod +x /usr/bin/cloud-hypervisor; \
+    setcap cap_net_admin+ep /usr/bin/cloud-hypervisor
+
+# CH Remote
+RUN LATEST_REMOTE_URL=$(curl -sL https://api.github.com/repos/cloud-hypervisor/cloud-hypervisor/releases/latest | jq -r '.assets[] | select(.name? | match(".*ch-remote$")) | .browser_download_url') \
+    curl -sL -o /usr/bin/ch-remote ${LATEST_REMOTE_URL}; \
+    chmod +x /usr/bin/ch-remote
 
 RUN systemctl set-default graphical.target
 

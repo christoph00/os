@@ -1,60 +1,60 @@
 default_platform := "amd64"
 build image arch=default_platform:
-    podman build -t localhost/{{image}}:latest \
+    sudo podman build -t localhost/{{image}}:latest \
         --platform linux/{{arch}} \
-        -f ./{{image}}/Containerfile \
-        ./{{image}}
+        --target {{image}} \
+        -f ./Containerfile
 
 build-qcow2 image arch=default_platform:
-    mkdir -p .osbuild/{{image}}/output
-    podman run \
+    mkdir -p output/{{image}}
+    sudo podman run \
         --rm \
         -it \
         --privileged \
         --pull=newer \
         --platform linux/{{arch}} \
         --security-opt label=type:unconfined_t \
-        -v $(pwd)/.osbuild/config.toml:/config.toml \
-        -v $(pwd)/.osbuild/{{image}}/output:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
+        -v $(pwd)/data/config.toml:/config.toml \
+        -v $(pwd)/output/{{image}}:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
         -v osbuild-store:/store \
         -v dnf-cache:/rpmmd \
         quay.io/centos-bootc/bootc-image-builder:latest \
             --chown 1000:1000 \
-            --type qcow2 --rootfs ext4 \
+            --type qcow2 --rootfs xfs \
             --local localhost/{{image}}:latest
 
 build-raw image:
-    mkdir -p .osbuild/{{image}}/output
+    mkdir -p output/{{image}}
     podman run \
         --rm \
         -it \
         --privileged \
         --pull=newer \
         --security-opt label=type:unconfined_t \
-        -v $(pwd)/.osbuild/config.toml:/config.toml \
-        -v $(pwd)/.osbuild/{{image}}/output:/output \
+        -v $(pwd)/data/config.toml:/config.toml \
+        -v $(pwd)/output/{{image}}:/output \
         -v /var/lib/containers/storage:/var/lib/containers/storage \
         -v osbuild-store:/store \
         -v dnf-cache:/rpmmd \
         quay.io/centos-bootc/bootc-image-builder:latest \
             --chown 1000:1000 \
-            --type raw --rootfs ext4 \
+            --type raw --rootfs xfs \
             --local localhost/{{image}}:latest
 
 build-vmdk image:
-    mkdir -p .osbuild/{{image}}/output
-    podman run \
+    mkdir -p output/{{image}}
+    sudo podman run \
         --rm \
         -it \
         --privileged \
         --pull=newer \
         --security-opt label=type:unconfined_t \
-        -v $(pwd)/.osbuild/config.toml:/config.toml \
-        -v $(pwd)/.osbuild/{{image}}/output:/output \
+        -v $(pwd)/data/config.toml:/config.toml \
+        -v $(pwd)/output/{{image}}:/output \
         -v /var/lib/containers/storage:/var/lib/containers/storage \
         -v osbuild-store:/store \
         -v dnf-cache:/rpmmd \
         quay.io/centos-bootc/bootc-image-builder:latest \
-            --type vmdk --rootfs ext4 \
+            --type vmdk --rootfs xfs \
             --chown 1000:1000 \
             --local localhost/{{image}}:latest

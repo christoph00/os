@@ -38,3 +38,6 @@ let ZAP_LATEST = (http get https://api.github.com/repos/srevinsaju/zap/releases/
 let ZAP_BIN = (fetch_generic $ZAP_LATEST "")
 mv $ZAP_BIN $ZAP_TARGET
 run-external chmod '+x' $ZAP_TARGET
+
+
+
