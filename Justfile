@@ -25,7 +25,7 @@ build-qcow2 image arch=default_platform:
 
 build-raw image:
     mkdir -p output/{{image}}
-    podman run \
+    sudo podman run \
         --rm \
         -it \
         --privileged \
