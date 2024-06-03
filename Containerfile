@@ -11,7 +11,7 @@ ADD ./files/ /
 
 RUN dnf -y autoremove ntfs-3g* ntfsprogs qemu-user-static* samba-* toolbox lvm2* mdadm*; \
     dnf -y install authselect bcache-tools nu firewalld wireguard-tools git-core htop just fedora-repos-ostree fedora-repos-archive vim-minimal util-linux usbutils \
-    systemd-oomd-defaults systemd-resolved qemu-guest-agent NetworkManager-bluetooth udisks2
+    systemd-oomd-defaults systemd-resolved qemu-guest-agent NetworkManager-bluetooth udisks2 opendoas
 
 
 RUN chmod +x /scripts/*.sh;
@@ -28,16 +28,10 @@ LABEL containers.bootc  1
 
 FROM os-main as os-init
 
-RUN groupadd --force wheel && \
-    chmod u+w /etc/sudoers && \
-    echo "%wheel   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Create devops user
-RUN useradd -G init && \
-    usermod --password $1$jB5apJnm$c/rJxRig6B2xFe6WmKr610 init
-
-
-ENV HOME /home/init
+RUN useradd init; \
+    usermod --password $1$jB5apJnm$c/rJxRig6B2xFe6WmKr610 init; \
+    echo 'permit nopass init as root' >> /etc/doas.conf
 
 LABEL containers.bootc  1
     
