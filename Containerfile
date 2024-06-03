@@ -28,13 +28,11 @@ LABEL containers.bootc  1
 
 FROM os-main as os-init
 
-
 RUN useradd init; \
-    usermod --password $1$jB5apJnm$c/rJxRig6B2xFe6WmKr610 init; \
+    echo 'Start123!' | passwd --stdin root; \
     echo 'permit nopass init as root' >> /etc/doas.conf
 
 LABEL containers.bootc  1
-    
 
 FROM os-main as os-desktop
 
